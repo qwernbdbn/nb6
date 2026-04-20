@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>不败神</title>
+<style>
+:root{
+    --bg:#ffb6c1;
+    --glass:rgba(255,255,255,0.1);
+}
+[data-theme="dark"]{
+    --bg:#1a1a1a;
+    --glass:rgba(0,0,0,0.3);
+}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+body{background:var(--bg);height:100vh;overflow:hidden;transition:.3s}
+.snow{
+    position:fixed;
+    color:#fff;
+    font-size:12px;
+    animation:fall 4s linear infinite;
+    z-index: 999;
+    pointer-events:none;
+}
+@keyframes fall{
+    0%{top:-10px;opacity:0}
+    10%{opacity:1}
+    100%{top:100vh;opacity:0}
+}
+.glass{
+background:rgba(255,255,255,0.1) !important;
+-webkit-backdrop-filter:blur(40px) saturate(200%) !important;
+backdrop-filter:blur(40px) saturate(200%) !important;
+border:1px solid rgba(255,255,255,0.18) !important;
+box-shadow:0 12px 40px rgba(0,0,0,0.06) !important;
+}
+.page{position:fixed;width:100%;height:100%;display:flex;align-items:center;justify-content:center;z-index:10;transition:all .5s cubic-bezier(0.34,1.56,0.64,1)}
+.hide{opacity:0;transform:scale(0.9);pointer-events:none!important}
+.load-box{padding:40px 60px;border-radius:24px;text-align:center}
+.load-title{
+    font-size:60px;
+    color:#fff;
+    font-weight:900;
+    font-family: "Arial Black", sans-serif;
+    animation:bounce 1.2s infinite
+}
+@keyframes bounce{50%{transform:scale(1.15)}}
+.load-bar{width:220px;height:7px;background:rgba(255,255,255,.2);border-radius:99px;margin-top:30px;overflow:hidden}
+.load-progress{width:0;height:100%;background:#ff0040;animation:load 1s forwards}
+@keyframes load{100%{width:100%}}
+.main-card{
+    width:90%;max-width:360px;padding:40px 25px;border-radius:28px;text-align:center;
+    transform:translateY(30px);opacity:0;animation:cardIn 1s .3s forwards
+}
+@keyframes cardIn{100%{transform:translateY(0);opacity:1}}
+.logo-text{
+    color:#fff;
+    font-size:28px;
+    font-weight:700;
+    font-family: "Arial Black", sans-serif;
+    margin-bottom:15px
+}
+.avatar-box{width:100px;height:100px;border-radius:50%;background:#ff0040;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;font-weight:bold;border:3px solid #fff}
+.tips-green{color:#39ff14;font-size:18px;margin-bottom:15px;font-weight:600}
+.tips-text{
+    color:#fff;
+    font-size:20px;
+    line-height:1.8;
+    margin-bottom:15px;
+    font-family: "KaiTi", serif;
+}
+.tips-tag{color:#39ff14;font-size:17px;margin-bottom:25px;font-weight:600}
+.free-tag{
+    color:#fff;
+    font-size:28px;
+    font-weight:700;
+    font-family: "Arial Black", sans-serif;
+    margin-bottom:30px
+}
+.func-input{width:100%;height:48px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;color:#fff;padding:0 15px;outline:none;margin-bottom:12px;font-size:16px;}
+.func-textarea{width:100%;height:120px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;color:#fff;padding:15px;outline:none;resize:none;margin-bottom:12px;font-size:16px;}
+.func-result{padding:15px;background:rgba(0,0,0,.2);border-radius:14px;color:#fff;margin-top:10px;text-align:left;min-height:60px;line-height:1.6;}
+.func-img{width:100%;height:180px;object-fit:contain;border-radius:14px;background:rgba(0,0,0,.2);margin-bottom:12px;display:none;}
+canvas{border-radius:14px;}
+@keyframes btnBounceSmooth {
+    0% { opacity: 0; transform: scale(0.2); }
+    50% { opacity: 1; transform: scale(1.2); }
+    70% { transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.main-btn{
+    width:100%;height:52px;border-radius:16px;background:#ff0040;color:#fff;border:none;
+    font-size:17px;font-weight:600;margin:8px 0;
+    opacity:0;
+    animation: btnBounceSmooth 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+.main-btn:nth-child(1){animation-delay:0.4s}
+.main-btn:nth-child(2){animation-delay:0.6s}
+.main-btn:nth-child(3){animation-delay:0.8s}
+.main-btn:nth-child(4){animation-delay:1.0s}
+.kami-box{width:90%;max-width:380px;padding:45px 30px;border-radius:28px;text-align:center}
+.kami-title{font-size:45px;color:#fff;font-weight:700;margin-bottom:30px}
+.kami-input{
+width:100%;height:50px;background:rgba(255,255,255,.1);
+border:1px solid rgba(255,255,255,.2);
+border-radius:14px;color:#fff;padding:0 18px;
+font-size:16px;margin-bottom:16px;outline:none
+}
+.kami-input::placeholder{color:rgba(255,255,255,.6)}
+.btn{width:100%;height:50px;border-radius:14px;font-size:16px;font-weight:600;border:none;margin-bottom:10px}
+.btn-verify{background:#ff0040;color:#fff}
+.btn-buy{background:rgba(255,0,64,.2);color:#ff0040;border:1px solid #ff0040}
+.success-box{padding:45px 55px;border-radius:24px;text-align:center}
+.success-title{font-size:45px;color:#fff;margin-bottom:20px}
+.success-desc{font-size:18px;color:rgba(255,255,255,.85);margin-bottom:30px}
+.btn-enter{background:#ff0040;color:#fff;padding:12px 35px;border-radius:14px;border:none}
+.profile-box{width:90%;max-width:380px;padding:30px 20px;border-radius:28px;text-align:center}
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:#ff0040;color:#fff;font-size:30px;display:flex;align-items:center;justify-content:center;margin:0 auto 15px}
+.profile-name{color:#fff;font-size:22px;font-weight:700;margin-bottom:8px}
+.profile-desc{color:rgba(255,255,255,.7);font-size:14px;margin-bottom:12px;line-height:1.4;padding:0 10px;}
+.profile-id{color:rgba(255,255,255,.7);font-size:14px;margin-bottom:25px}
+.profile-level{color:#39ff14;font-size:16px;margin-bottom:8px;font-weight:600}
+.profile-exp{color:#fff;font-size:14px;margin-bottom:18px;opacity:0.8}
+.profile-btn{width:100%;height:45px;border-radius:12px;background:rgba(255,255,255,.1);color:#fff;border:none;margin:8px 0}
+.auth-box{width:90%;max-width:380px;padding:40px 30px;border-radius:28px;text-align:center}
+.auth-title{font-size:40px;color:#fff;margin-bottom:20px}
+.auth-tab{display:flex;gap:8px;margin-bottom:20px}
+.tab-btn{flex:1;height:40px;border-radius:10px;background:rgba(255,255,255,.1);color:#fff;border:none;font-size:16px}
+.tab-btn.active{background:#ff0040}
+.auth-input{width:100%;height:50px;border-radius:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:0 18px;margin-bottom:12px;outline:none}
+.auth-input::placeholder{color:rgba(255,255,255,.6)}
+.btn-auth{width:100%;height:50px;background:#ff0040;color:#fff;border-radius:14px;border:none;font-size:16px;margin-top:10px}
+.btn-back{background:rgba(255,255,255,.1);color:#fff;margin-top:15px}
+.modal{position:fixed;width:100%;height:100%;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:9999}
+.modal-box{padding:35px 45px;border-radius:22px;text-align:center;min-width:280px}
+.modal-text{font-size:17px;color:#fff;margin-bottom:25px}
+.modal-btn{background:#ff0040;color:#fff;padding:10px 30px;border-radius:10px;border:none}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:20px;color:#fff;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s ease}
+.toast.show{opacity:1}
+.music-toggle{position:fixed;bottom:100px;left:20px;width:42px;height:42px;border-radius:50%;color:#fff;font-size:18px;border:none;z-index:9999}
+.music-player{
+    position:fixed;bottom:15px;left:15px;right:15px;height:78px;border-radius:22px;
+    display:flex;align-items:center;padding:0 18px;z-index:9998;
+    transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.music-player.hide{
+    transform:translateX(calc(-100% - 20px));
+}
+.cover{width:52px;height:52px;border-radius:50%;background:#ff0040;color:#fff;display:flex;align-items:center;justify-content:center}
+.info{margin-left:16px;color:#fff}
+.ctrl{margin-left:auto;display:flex;gap:22px;color:#fff;font-size:21px;cursor:pointer}
+.float-ball{
+position: fixed !important;
+top: 28px !important;
+right: 18px !important;
+width: 40px !important;
+height: 40px !important;
+border-radius: 50% !important;
+background: #111111 !important;
+border: 2px solid #ffffff !important;
+z-index:99999999 !important;
+box-shadow:0 0 12px rgba(0,0,0,0.6) !important;
+user-select: none !important;
+touch-action: none !important;
+display:block !important;
+}
+@keyframes shake{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.shake{animation:shake 0.28s ease}
+.mood-modal{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999999;display:none;align-items:center;justify-content:center}
+.mood-box{width:85%;max-width:350px;padding:30px;border-radius:20px;text-align:center;transform:translateY(100px);opacity:0;transition:all 0.4s ease}
+.mood-modal.show .mood-box{transform:translateY(0);opacity:1}
+.mood-text{font-size:18px;color:#fff;line-height:1.6}
+#editModal .modal-box {width:85%;max-width:350px;}
+#editModal h3{color:#fff;margin-bottom:20px;font-size:22px;}
+.edit-input{
+    width:100%;height:50px;background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:14px;color:#fff;padding:0 18px;
+    font-size:16px;margin-bottom:12px;outline:none
+}
+.edit-input::placeholder{color:rgba(255,255,255,.6);}
+.setting-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:999999;display:none;align-items:center;justify-content:center;padding:20px}
+.setting-box{width:100%;max-width:380px;border-radius:24px;padding:25px;max-height:80vh;overflow-y:auto;transform:translateY(80px);opacity:0;transition:all 0.4s ease}
+.setting-modal.show .setting-box{transform:translateY(0);opacity:1}
+.setting-title{font-size:24px;color:#fff;font-weight:bold;text-align:center;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.2)}
+.setting-item{display:flex;align-items:center;justify-content:space-between;padding:14px 10px;border-radius:12px;margin-bottom:8px;color:#fff;font-size:16px}
+.setting-switch{width:42px;height:22px;border-radius:20px;background:#ccc;position:relative}
+.setting-switch.active{background:#ff0040}
+.setting-switch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:all 0.2s}
+.setting-switch.active::after{left:22px}
+.setting-btn{width:100%;padding:12px;border-radius:12px;background:#ff0040;color:#fff;border:none;font-size:16px;margin-top:15px}
+.setting-close{margin-top:10px;background:rgba(255,255,255,.1)}
+#fireworks{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    pointer-events:none;
+    z-index:999999999;
+}
+</style>
+</head>
+<body>
+<canvas id="fireworks"></canvas>
+<div class="float-ball" id="floatBall"></div>
+<div class="mood-modal" id="moodModal" onclick="closeMood()">
+<div class="mood-box glass" onclick="event.stopPropagation()"><p class="mood-text" id="moodText"></p></div>
+</div>
+<div id="editModal" class="modal hide">
+    <div class="modal-box glass">
+        <h3>编辑资料</h3>
+        <input type="text" id="editName" class="edit-input" placeholder="输入新昵称">
+        <input type="text" id="editDesc" class="edit-input" placeholder="输入个人介绍">
+        <button class="modal-btn" onclick="saveProfile()">保存修改</button>
+        <button class="modal-btn" style="background:#ccc;margin-top:10px" onclick="closeEditModal()">取消</button>
+    </div>
+</div>
+<div class="setting-modal" id="settingModal" onclick="closeSetting()">
+<div class="setting-box glass" onclick="event.stopPropagation()">
+<div class="setting-title">系统设置</div>
+<div class="setting-item" onclick="toggleSet('music')"><span>背景音乐</span><div class="setting-switch active" id="music"></div></div>
+<div class="setting-item" onclick="toggleSet('snow')"><span>雪花特效</span><div class="setting-switch active" id="snow"></div></div>
+<div class="setting-item" onclick="toggleSet('firework')"><span>烟花特效</span><div class="setting-switch active" id="firework"></div></div>
+<div class="setting-item" onclick="toggleTheme()"><span>深色模式</span><div class="setting-switch" id="theme"></div></div>
+<div class="setting-item" onclick="clearCache()"><span>清除缓存</span><span style="opacity:.7">一键清理</span></div>
+<div class="setting-item" onclick="tip('当前版本 v2.0')"><span>版本更新</span><span style="opacity:.7">已是最新</span></div>
+<button class="setting-btn setting-close" onclick="closeSetting()">关闭设置</button>
+</div>
+</div>
+<div id="p1" class="page"><div class="load-box glass"><div class="load-title">不败神</div><div class="load-bar"><div class="load-progress"></div></div></div></div>
+<div id="p2" class="page hide">
+<div class="kami-box glass">
+<div class="kami-title">不败神</div>
+<input id="kami" class="kami-input" placeholder="请输入授权卡密">
+<button class="btn btn-verify" onclick="check()">立即验证</button>
+<button class="btn btn-buy" onclick="tip('购买卡密请联系作者\n作者快手：qip112211\n\n粉丝免费卡密：bbs8888\n免费卡密功能受限')">购买卡密</button>
+</div>
+</div>
+<div id="p3" class="page hide"><div class="success-box glass"><div class="success-title">验证成功</div><div class="success-desc">欢迎进入系统</div><button class="btn-enter" onclick="goHome()">进入系统</button></div></div>
+<div id="p4" class="page hide">
+<div class="main-card glass">
+<div class="logo-text">不敗神</div>
+<div class="avatar-box">神</div>
+<div class="tips-green">服务器同步验证成功</div>
+<div class="tips-text">后来除了梦以外的地方<br>我再也没见过你了.</div>
+<div class="tips-tag">不敗神官方网站</div>
+<div class="free-tag"></div>
+<button class="main-btn" id="userBtn" onclick="toUser()">个人中心</button>
+<button class="main-btn" onclick="openSetting()">设置中心</button>
+<button class="main-btn" onclick="show('p7')">功能专区</button>
+<button class="main-btn" onclick="show('p2')">返回验证卡密</button>
+</div>
+</div>
+<div id="p7" class="page hide">
+<div class="main-card glass">
+<div class="logo-text">功能专区</div>
+<div class="tips-text">不败神 · 实用工具集合</div>
+<button class="main-btn" onclick="show('p7_1')">📱 短视频解析</button>
+<button class="main-btn" onclick="show('p7_2')">🔐 密码生成器</button>
+<button class="main-btn" onclick="show('p7_3')">🎨 随机壁纸</button>
+<button class="main-btn" onclick="show('p7_4')">🧮 进制转换工具</button>
+<button class="main-btn" onclick="show('p7_5')">📝 字数统计工具</button>
+<button class="main-btn" onclick="show('p4')">返回主页</button>
+</div>
+</div>
+<div id="p7_1" class="page hide">
+<div class="main-card glass">
+<div class="logo-text">短视频解析</div>
+<input class="func-input" id="videoUrl" placeholder="粘贴视频链接">
+<button class="main-btn" onclick="parseVideo()">一键解析</button>
+<div id="parseResult" class="func-result">粘贴链接后点击解析</div>
+<button class="main-btn" onclick="show('p7')">返回功能区</button>
+</div>
+</div>
+<div id="p7_2" class="page hide">
+<div class="main-card glass">
+<div class="logo-text">密码生成器</div>
+<input class="func-input" id="pwdLen" type="number" placeholder="密码长度（默认16位）" value="16">
+<button class="main-btn" onclick="genPassword()">生成强密码</button>
+<button class="main-btn" onclick="copyPassword()">复制密码</button>
+<div id="pwdResult" class="func-result">点击生成获取密码</div>
+<button class="main-btn" onclick="show('p7')">返回功能区</button>
+</div>
+</div>
+<div id="p7_3" class="page hide">
+<div class="main-card glass">
+<div class="logo-text">随机壁纸</div>
+<img id="wallPreview" class="func-img">
+<button class="main-btn" onclick="loadWallpaper()">随机换一张</button>
+<button class="main-btn" onclick="saveWallpaper()">保存到手机</button>
+<button class="main-btn" onclick="show('p7')">返回功能区</button>
+</div>
+</div>
+<div id="p7_4" class="page hide">
+<div class="main-card glass">
+<div class="logo-text">进制转换</div>
+<input class="func-input" id="numInput" placeholder="输入数字">
+<select id="fromBase" class="func-input">
+    <option value="10">十进制</option>
+    <option value="2">二进制</option>
+    <option value="16">十六进制</option>
+</select>
+<select id="toBase" class="func-input">
+    <option value="2">转二进制</option>
+    <option value="10">转十进制</option>
+    <option value="16">转十六进制</option>
+</select>
+<button class="main-btn" onclick="convertBase()">开始转换</button>
+<div id="baseResult" class="func-result">转换结果显示</div>
+<button class="main-btn" onclick="show('p7')">返回功能区</button>
+</div>
+</div>
+<div id="p7_5" class="page hide">
+<div class="main-card glass">
+<div class="logo-text">字数统计</div>
+<textarea id="textCount" class="func-textarea" placeholder="粘贴文本，统计字数/字符数"></textarea>
+<button class="main-btn" onclick="countText()">开始统计</button>
+<div id="countResult" class="func-result">统计结果显示</div>
+<button class="main-btn" onclick="show('p7')">返回功能区</button>
+</div>
+</div>
+<div id="p5" class="page hide"><div class="auth-box glass"><div class="auth-title">个人中心</div><div class="auth-tab"><button class="tab-btn active" id="t1">登录</button><button class="tab-btn" id="t2">注册</button></div><input id="user" class="auth-input" placeholder="账号"><input id="pwd" class="auth-input" placeholder="密码" type="password"><button id="subBtn" class="btn-auth" onclick="auth()">立即登录</button><button class="btn-auth btn-back" onclick="show('p4')">返回系统</button></div></div>
+<div id="p6" class="page hide">
+<div class="profile-box glass">
+<div class="profile-avatar">神</div>
+<div class="profile-name" id="profileName">不败用户</div>
+<div class="profile-desc" id="profileDesc">这个人很懒，什么都没有留下</div>
+<div class="profile-id" id="profileId">ID：加载中</div>
+<div class="profile-level" id="profileLevel">等级：1</div>
+<div class="profile-exp" id="profileExp">经验：0 / 100</div>
+<button class="profile-btn glass" onclick="signIn()">每日签到</button>
+<button class="profile-btn glass" onclick="openEditModal()">编辑资料</button>
+<button class="profile-btn glass" onclick="logout()">退出登录</button>
+<button class="profile-btn glass" onclick="show('p4')">返回系统</button>
+</div>
+</div>
+<div id="md" class="modal hide"><div class="modal-box glass"><p id="mdText"></p><button class="modal-btn" onclick="closeMd()">确定</button></div></div>
+<div id="toast" class="toast glass">已为您自动登录</div>
+<button id="toggleBtn" class="music-toggle glass">◀</button>
+<div id="player" class="music-player glass"><div class="cover">♪</div><div class="info"><div>相思遥</div><div style="font-size:12px;opacity:.7">玉慧同学</div></div><div class="ctrl"><span>⏮</span><span id="play">▶</span><span>⏭</span></div></div>
+<audio id="bgm" loop src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Simon_Panrucker/Happy_Christmas_You_Guys/Simon_Panrucker_-_01_-_Snowflakes_Falling_Down.mp3">
+
+<script>
+let userData=null,isLogin=true,snowEnable=true,fireworkEnable=true;
+const $=el=>document.getElementById(el);
+const canvas=$("fireworks");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+const moodList = ["风停在窗边，嘱咐我要热爱世界","情绪会散，遗憾会淡，万事皆可期","开心就笑，累了就睡，生活就是这么简单","那些无人问津的日子，都在悄悄发光","今天的风很温柔，适合放下所有不开心","慢慢来，谁还没有一个努力的过程","快乐没有标准答案，开心就满分","日落跌进昭昭星野，人间忽晚山河已秋","做自己的太阳，无需借谁的光","温柔半两，从容一生，平安喜乐","所有的最好，都不如刚好","生活细碎万物成诗，人间值得未来可期","爱意随风起，风止意难平","保持热爱，奔赴山海，不负韶华","心事藏进晚风，温柔留给自己","别让烦恼，挤走属于你的快乐","人间烟火气，最抚凡人心","岁岁年年，万喜万般宜","清醒自律，温柔知趣，慢慢变好","遗憾是常态，圆满是例外","心有山海，静而无边，温柔且坚定","把烦心事丢掉，腾出地方装鲜花","日子渺小重复，却也幸福滚烫","风很温柔，花很浪漫，你很特别","接受普通，然后拼尽全力去与众不同","奔赴简单快乐的生活，远离消耗你的人","日落归山海，山海藏深意","慢慢理解世界，慢慢更新自己","平安喜乐，得偿所愿，顺顺利利","不慌不忙，慢慢发光，不负时光","生活百般滋味，你要笑着面对","温柔坚定，自在从容，万事顺意","把期待降低，把依赖变少，会过得很好","人间一趟，积极向上，不畏将来","星光不问赶路人，时光不负有心人","所求皆如愿，所行化坦途","保持温柔，奔赴山海，不负遇见","日子清透，世事温柔，岁岁平安","别回头，跟着光，往前走就好","热爱可抵岁月漫长，温柔可挡艰难时光","知足上进，温柔坚定，不负自己","风遇山止，船到岸停，万事皆有归途","生活有望穿秋水的等待，也有意想不到的惊喜","慢慢变好，是给自己最好的礼物","心怀浪漫宇宙，也珍惜人间日常","万事尽心尽力，而后顺其自然","温柔要有，但不是妥协，要安静中坚强","人间枝头，各自乘流，各自安好","以欢喜之心，慢度日常，岁岁无忧","前路浩浩荡荡，万事尽可期待"];
+
+// 等级配置
+const levelConfig = {
+  getExpNeed(level){ return level * 100 },
+  addExp(user, exp){
+    user.exp = (user.exp || 0) + exp;
+    let level = user.level || 1;
+    let need = this.getExpNeed(level);
+    while(user.exp >= need){
+      user.exp -= need;
+      level++;
+      need = this.getExpNeed(level);
+    }
+    user.level = level;
+    this.saveUser(user);
+  },
+  saveUser(user){
+    let list = getUserList();
+    let idx = list.findIndex(u=>u.user===user.user);
+    if(idx>-1) list[idx] = user;
+    localStorage.setItem("user_list",JSON.stringify(list));
+    localStorage.setItem("login_user",JSON.stringify(user));
+  }
+};
+
+// 签到
+function signIn(){
+  if(!userData){ tip("请先登录"); return; }
+  let today = new Date().toDateString();
+  if(userData.lastSign === today){ tip("今日已签到"); return; }
+  userData.lastSign = today;
+  levelConfig.addExp(userData, 50);
+  showHome();
+  toast("签到成功 +50经验");
+}
+
+// 页面切换
+function show(id){
+    let kamiType = localStorage.getItem("kamiType");
+    if(kamiType === "free" && (id === "p7" || id.startsWith("p7_"))){
+        tip("免费卡密无法使用功能专区，请使用VIP卡密");
+        show("p4");
+        return;
+    }
+    document.querySelectorAll(".page").forEach(p=>p.classList.add("hide"));
+    $(id).classList.remove("hide");
+}
+
+function tip(text){$("mdText").innerText=text;$("md").classList.remove("hide");}
+function closeMd(){$("md").classList.add("hide");}
+function toast(msg){$("toast").innerText=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2000);}
+
+function getUserList(){return JSON.parse(localStorage.getItem("user_list")||"[]");}
+function isNameExist(name){return getUserList().some(u=>u.user===name);}
+
+function saveUser(user){
+  let list=getUserList();
+  let old = list.find(u=>u.user===user.user);
+  if(old) Object.assign(old, user);
+  else list.push(user);
+  localStorage.setItem("user_list",JSON.stringify(list));
+}
+
+function updateUser(oldName,newUser){
+  let list=getUserList();
+  let idx=list.findIndex(u=>u.user===oldName);
+  if(idx!==-1)list[idx]=newUser;
+  localStorage.setItem("user_list",JSON.stringify(list));
+}
+
+function check(){
+    let v=$("kami").value.trim();
+    const freeKami = "bbs8888";
+    let list = ["bbs888vip","bs666888ok","vip999bbs","god666888","bsvip888666", freeKami];
+    if(list.includes(v)){
+        localStorage.setItem("kamiType", v === freeKami ? "free" : "vip");
+        show("p3");
+    } else tip("卡密错误");
+}
+
+function goHome(){
+    show("p4");
+    let kamiType = localStorage.getItem("kamiType");
+    $("userBtn").style.display = kamiType === "free" ? "none" : "block";
+    
+    let funcBtn = document.querySelector(".main-btn[onclick=\"show('p7')\"]");
+    if(funcBtn){
+        funcBtn.style.display = kamiType === "free" ? "none" : "block";
+    }
+}
+
+// 自动登录
+function autoLogin(){
+  let save=localStorage.getItem("login_user");
+  if(save){
+    userData=JSON.parse(save);
+    toast("自动登录成功");
+    return true;
+  }
+  return false;
+}
+
+function toUser(){
+    if(autoLogin()){ showHome(); return; }
+    show("p5");
+}
+
+function createID(){return "BS"+Date.now()+Math.floor(Math.random()*9999);}
+
+function showHome(){
+    $("profileName").innerText = userData.user;
+    $("profileDesc").innerText = userData.desc || "这个人很懒，什么都没有留下";
+    $("profileId").innerText = "ID："+userData.id;
+    $("profileLevel").innerText = `等级：${userData.level || 1}`;
+    let need = levelConfig.getExpNeed(userData.level || 1);
+    $("profileExp").innerText = `经验：${userData.exp || 0} / ${need}`;
+    show("p6");
+}
+
+function logout(){
+    localStorage.removeItem("login_user");
+    userData=null;
+    tip("已退出登录");
+    show("p5");
+}
+
+$("t1").onclick=()=>{
+  isLogin=true;
+  $("t1").classList.add("active");
+  $("t2").classList.remove("active");
+  $("subBtn").innerText="立即登录";
+}
+
+$("t2").onclick=()=>{
+  isLogin=false;
+  $("t2").classList.add("active");
+  $("t1").classList.remove("active");
+  $("subBtn").innerText="立即注册";
+}
+
+function auth(){
+    let user=$("user").value.trim(),pwd=$("pwd").value.trim();
+    if(!user||!pwd){tip("请填写账号密码");return;}
+    if(!isLogin){
+        if(isNameExist(user)){tip("该名称已被占用！");return;}
+        userData={
+          user:user,pwd:pwd,id:createID(),
+          desc:"这个人很懒，什么都没有留下",
+          level:1, exp:0, lastSign:""
+        };
+        saveUser(userData);
+        localStorage.setItem("login_user",JSON.stringify(userData));
+        tip("注册成功！自动登录");
+        setTimeout(showHome,1200);
+        return;
+    }
+    let target=getUserList().find(u=>u.user===user&&u.pwd===pwd);
+    if(target){
+      userData=target;
+      if(!userData.level) userData.level=1;
+      if(!userData.exp) userData.exp=0;
+      localStorage.setItem("login_user",JSON.stringify(userData));
+      tip("登录成功");
+      setTimeout(showHome,1200);
+    }else{
+      tip("账号密码错误");
+    }
+}
+
+function openEditModal(){
+    $("editName").value=$("profileName").innerText;
+    $("editDesc").value=$("profileDesc").innerText;
+    $("editModal").classList.remove("hide");
+}
+
+function closeEditModal(){$("editModal").classList.add("hide");}
+
+function saveProfile(){
+    let newName=$("editName").value.trim();
+    let newDesc=$("editDesc").value.trim();
+    if(!newName){tip("昵称不能为空");return;}
+    if(!userData){tip("请先登录");return;}
+    if(newName!==userData.user && isNameExist(newName)){tip("该名称已被占用！");return;}
+    let oldName=userData.user;
+    userData.user=newName;
+    userData.desc=newDesc;
+    updateUser(oldName,userData);
+    localStorage.setItem("login_user",JSON.stringify(userData));
+    showHome();
+    toast("资料修改成功");
+    closeEditModal();
+}
+
+class Particle{constructor(x,y,color){this.x=x;this.y=y;this.speed=Math.random()*4+2;this.angle=Math.random()*Math.PI*2;this.gravity=0.05;this.vx=Math.cos(this.angle)*this.speed;this.vy=Math.sin(this.angle)*this.speed;this.alpha=1;this.decay=Math.random()*0.02+0.01;this.color=color;}update(){this.vy+=this.gravity;this.x+=this.vx;this.y+=this.vy;this.alpha-=this.decay;}draw(){ctx.save();ctx.globalAlpha=this.alpha;ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,2,0,Math.PI*2);ctx.fill();ctx.restore();}}
+let particles=[];const colors=["#ff0040","#fff","#39ff14","#ff69b4","#ffff00"];
+function createFirework(x,y){fireworkEnable&&Array.from({length:100}).forEach(()=>particles.push(new Particle(x,y,colors[Math.floor(Math.random()*colors.length)])));}
+function animateFirework(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=particles.length-1;i>=0;i--){let p=particles[i];p.update();p.draw();p.alpha<=0&&particles.splice(i,1);}requestAnimationFrame(animateFirework);}
+animateFirework();
+window.addEventListener("click",(e)=>createFirework(e.clientX,e.clientY));
+
+let dragging=false,startX,startY,initLeft,initTop,isClick=true;
+floatBall.style.left=(window.innerWidth-60)+"px";floatBall.style.top="28px";floatBall.style.right="auto";
+floatBall.addEventListener("touchstart",dragStart,{passive:false});
+floatBall.addEventListener("mousedown",dragStart);
+document.addEventListener("touchmove",dragMove,{passive:false});
+document.addEventListener("mousemove",dragMove);
+document.addEventListener("touchend",dragEnd);
+document.addEventListener("mouseup",dragEnd);
+
+function dragStart(e){dragging=true;isClick=true;let t=e.touches?e.touches[0]:e;startX=t.clientX;startY=t.clientY;initLeft=parseFloat(floatBall.style.left);initTop=parseFloat(floatBall.style.top);}
+function dragMove(e){if(!dragging)return;isClick=false;e.preventDefault();let t=e.touches?e.touches[0]:e;let nx=initLeft+(t.clientX-startX);let ny=initTop+(t.clientY-startY);let maxW=window.innerWidth-floatBall.offsetWidth;let maxH=window.innerHeight-floatBall.offsetHeight;nx=Math.max(0,Math.min(nx,maxW));ny=Math.max(0,Math.min(ny,maxH));floatBall.style.left=nx+"px";floatBall.style.top=ny+"px";}
+function dragEnd(){dragging=false;}
+
+floatBall.onclick=()=>{if(!isClick)return;floatBall.classList.add("shake");setTimeout(()=>floatBall.classList.remove("shake"),280);$("moodText").innerText=moodList[Math.floor(Math.random()*moodList.length)];$("moodModal").style.display="flex";setTimeout(()=>$("moodModal").classList.add("show"),10);}
+function closeMood(){$("moodModal").classList.remove("show");setTimeout(()=>$("moodModal").style.display="none",400);}
+
+setInterval(()=>{if(!snowEnable)return;let s=document.createElement("div");s.className="snow";s.innerText="❄";s.style.left=Math.random()*100+"%";document.body.appendChild(s);setTimeout(()=>s.remove(),4000);},150);
+
+function initSet(){let set=JSON.parse(localStorage.getItem("set")||'{"music":1,"snow":1,"firework":1,"theme":0}');set.music?$("music").classList.add("active"):$("music").classList.remove("active");snowEnable=set.snow;set.snow?$("snow").classList.add("active"):$("snow").classList.remove("active");fireworkEnable=set.firework;set.firework?$("firework").classList.add("active"):$("firework").classList.remove("active");document.documentElement.setAttribute("data-theme",set.theme?"dark":"light");set.theme?$("theme").classList.add("active"):$("theme").classList.remove("active");}
+initSet();
+
+function toggleSet(key){let set=JSON.parse(localStorage.getItem("set")||'{"music":1,"snow":1,"firework":1,"theme":0}');set[key]=!set[key];localStorage.setItem("set",JSON.stringify(set));$(key).classList.toggle("active");if(key=="music"){set.music?$("player").classList.remove("hide"):$("player").classList.add("hide");toast(set.music?"音乐开启":"音乐关闭");}if(key=="snow"){snowEnable=set.snow;toast(set.snow?"雪花开启":"雪花关闭");}if(key=="firework"){fireworkEnable=set.firework;toast(set.firework?"烟花开启":"烟花关闭");}}
+function toggleTheme(){let set=JSON.parse(localStorage.getItem("set")||'{"music":1,"snow":1,"firework":1,"theme":0}');set.theme=!set.theme;localStorage.setItem("set",JSON.stringify(set));$("theme").classList.toggle("active");document.documentElement.setAttribute("data-theme",set.theme?"dark":"light");toast(set.theme?"深色模式":"浅色模式");}
+function clearCache(){localStorage.clear();initSet();toast("缓存已清理");}
+function openSetting(){$("settingModal").style.display="flex";setTimeout(()=>$("settingModal").classList.add("show"),10);}
+function closeSetting(){$("settingModal").classList.remove("show");setTimeout(()=>$("settingModal").style.display="none",400);}
+
+const audio = $("bgm");const playBtn = $("play");
+audio.addEventListener("play", () => {playBtn.innerText = "⏸";});
+audio.addEventListener("pause", () => {playBtn.innerText = "▶";});
+playBtn.onclick = () => {if (audio.paused) {audio.play().catch(err => console.log("播放失败",err));} else {audio.pause();}};
+$("toggleBtn").onclick=()=>{$("player").classList.toggle("hide");$("toggleBtn").innerText=$("player").classList.contains("hide")?"▶":"◀";}
+
+function parseVideo(){const url=$("videoUrl").value.trim();if(!url){tip("请粘贴视频链接");return;}$("parseResult").innerText="解析成功！\n\n链接："+url+"\n\n（演示版）";toast("解析完成");}
+function genPassword(){const len=parseInt($("pwdLen").value)||16;const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";let pwd="";for(let i=0;i<len;i++)pwd+=chars[Math.floor(Math.random()*chars.length)];$("pwdResult").innerText=pwd;toast("密码生成成功");}
+function copyPassword(){const pwd=$("pwdResult").innerText;if(!pwd||pwd==="点击生成获取密码"){tip("请先生成密码");return;}navigator.clipboard.writeText(pwd).then(()=>toast("复制成功"));}
+function loadWallpaper(){const id=Math.floor(Math.random()*1000);$("wallPreview").src=`https://picsum.photos/300/500?random=${id}`;$("wallPreview").style.display="block";toast("壁纸加载成功");}
+function saveWallpaper(){if(!$("wallPreview").src){tip("请先加载壁纸");return;}const a=document.createElement("a");a.href=$("wallPreview").src;a.download="不败神_壁纸";a.click();toast("壁纸已保存");}
+function convertBase(){const numStr=$("numInput").value.trim();const from=parseInt($("fromBase").value);const to=parseInt($("toBase").value);if(!numStr){tip("请输入数字");return;}try{const dec=parseInt(numStr,from);if(isNaN(dec))throw new Error();let res="";if(to===2)res=dec.toString(2);if(to===10)res=dec.toString(10);if(to===16)res=dec.toString(16).toUpperCase();$("baseResult").innerText=`转换结果：${res}`;toast("转换成功");}catch(e){tip("数字无效");}}
+function countText(){const text=$("textCount").value;const len=text.length;const cnLen=(text.match(/[\u4e00-\u9fa5]/g)||[]).length;const enLen=len-cnLen;const words=text.trim().split(/\s+/).filter(w=>w).length;$("countResult").innerText=`总字符数：${len}\n汉字数：${cnLen}\n字母/符号数：${enLen}\n单词数：${words}`;toast("统计完成");}
+
+window.onload=()=>{
+  setTimeout(()=>{
+    show("p2");
+    autoLogin();
+  },1000);
+}
+
+window.addEventListener("resize",()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+</script>
+</body>
+</html>
